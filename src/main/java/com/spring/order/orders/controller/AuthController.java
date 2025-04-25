@@ -1,13 +1,18 @@
 package com.spring.order.orders.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.order.orders.Utils.LoginResponse;
 import com.spring.order.orders.Utils.RegisterResponse;
+import com.spring.order.orders.models.LoggedUser;
 import com.spring.order.orders.models.User;
 import com.spring.order.orders.service.AuthService;
 
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
+     private static final Logger logger = LogManager.getLogger(AuthController.class);
     private final AuthService authService;
 
     @Autowired
@@ -30,9 +36,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> RegisterUser(@Valid @RequestBody User user) {
-
-        // validtaion part 
-
         RegisterResponse rr =new RegisterResponse();
         if (authService.isRegistered(user.getUsername())){
             rr.setUsername(user.getUsername());
@@ -54,6 +57,19 @@ public class AuthController {
         return new ResponseEntity<>(rr, HttpStatus.OK);
 
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> postMethodName(@Valid @RequestBody LoggedUser user) {
+        LoginResponse response = authService.isloggedIn(user);
+        logger.info("LoginResponse: {}", response.getJWTToken());
+        if (response.isStatus()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
+    
     
      
     

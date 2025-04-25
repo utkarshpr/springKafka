@@ -25,6 +25,13 @@ public class User {
     private String contactNumber;
     @Email(message = "email is required")
     private String email;
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+    private String role;
     public String getUsername() {
         return username;
     }
