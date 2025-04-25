@@ -62,10 +62,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> postMethodName(@Valid @RequestBody LoggedUser user) {
         LoginResponse response = authService.isloggedIn(user);
-        logger.info("LoginResponse: {}", response.getJWTToken());
+        logger.info("postMethodName:: LoginResponse: {}", response.getJWTToken());
         if (response.isStatus()) {
+            logger.info("postMethodName Loggedin succesfully ", response.toString());
             return ResponseEntity.ok(response);
         } else {
+            logger.info("postMethodName :: unable to log in ", response.toString());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }

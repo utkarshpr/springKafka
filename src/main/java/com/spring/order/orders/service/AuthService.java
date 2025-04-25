@@ -31,24 +31,28 @@ public class AuthService {
     }
 
     public boolean isRegistered(String username){
+        logger.info("IsRegistered method :: started");
         Optional<User> user=authRepository.findByUsername(username);
 
         if (user.isPresent()){
+            logger.info("User is present");
                 return true;
         }
-
+        logger.warn("User is not present.");
         return false;
 
     }
 
     public boolean registeringUser(User user) {
+        logger.info("Starting register process for user: {}", user.getUsername());
         try {
             String encodedPassword = passwordEncoder.encode(user.getPassword()); 
             user.setPassword(encodedPassword);
             authRepository.save(user);
+            logger.info("User saved to DB", user.getUsername());
             return true; 
         } catch (Exception e) {
-            
+            logger.error("Error occur while registering the user", e);
             e.printStackTrace(); 
             return false; 
         }
