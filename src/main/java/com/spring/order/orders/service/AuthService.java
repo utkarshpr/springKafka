@@ -71,9 +71,7 @@ public class AuthService {
                 // Store tokens in Redis
                 
                 tokenService.saveToken(token,oneDayToken,actualUser.getUsername());
-                System.out.println("-------------------------------------------");
-                System.out.println( tokenService.getToken(actualUser.getUsername()));
-                System.out.println("-------------------------------------------");
+               
                 return new LoginResponse(true, "Login successful", actualUser.getUsername(), token);
             } else {
                 logger.warn("Incorrect password for user: {}", user.getUsername());
