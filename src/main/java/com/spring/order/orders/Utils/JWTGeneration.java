@@ -11,6 +11,7 @@ public class JWTGeneration {
 
     // Token validity (e.g., 1 hour)
     private static final long EXPIRATION_TIME = 3600000;
+    private static final long EXPIRATION_TIME_24 = 3600000*24;
     public static String generateToken(String username,String role) {
        return Jwts.builder()
                 .setSubject(username)
@@ -20,6 +21,16 @@ public class JWTGeneration {
                 .signWith(SECRET_KEY)
                 .compact();
     }
+
+    public static String generate24HoyrsToken(String username,String role) {
+        return Jwts.builder()
+                 .setSubject(username)
+                 .setSubject(role)
+                 .setIssuedAt(new Date())
+                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_24))
+                 .signWith(SECRET_KEY)
+                 .compact();
+     }
 
     // Optional: validate token
     public static boolean validateToken(String token) {
