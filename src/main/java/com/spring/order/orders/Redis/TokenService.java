@@ -1,32 +1,42 @@
 package com.spring.order.orders.Redis;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class TokenService {
 
     @Autowired
-    private  RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
-    private  final String TOKEN_KEY_PREFIX = "auth_token:";
-    private  final String TOKEN_KEY_PREFIX_24 = "auth_token24:";
-    public  void saveToken(String token, String userId) {
-        redisTemplate.opsForValue().set(TOKEN_KEY_PREFIX + userId, token, 1, TimeUnit.HOURS); // Expiration in 1 hour
+    private final String TOKEN_KEY = "auth_token:";
+    private final String TOKEN_KEY_24 = "auth_token24:";
+
+    public void saveToken(String token, String longExpiryToken, String userId) {
+        Map<String, String> fields = new HashMap<>();
+        fields.put(TOKEN_KEY, token);
+        fields.put(TOKEN_KEY_24, longExpiryToken);
+
+        // Save to Redis Hash
+        redisTemplate.opsForHash().putAll(userId, fields);
+        // Set an expiration time for the key (e.g., 4 hours)
+        redisTemplate.expire(userId, 4, TimeUnit.HOURS);
     }
 
-    public  void saveToken24(String token, String userId) {
-        redisTemplate.opsForValue().set(TOKEN_KEY_PREFIX + userId, token, 24, TimeUnit.HOURS); // Expiration in 6 hour
-    }
+    public Map<Object, Object> getToken(String userId) {
+        // Fetch the entire hash stored for the user ID
+        Map<Object, Object> tokenData = redisTemplate.opsForHash().entries(userId);
 
-    public  String getToken(String userId) {
-        return redisTemplate.opsForValue().get(TOKEN_KEY_PREFIX + userId);
-    }
+        // Log the fetched data for debugging
+        System.out.println("Fetched Token Data: " + tokenData);
 
-    public  String getToken24(String userId) {
-        return redisTemplate.opsForValue().get(TOKEN_KEY_PREFIX_24 + userId);
+        return tokenData;
     }
 }
+
