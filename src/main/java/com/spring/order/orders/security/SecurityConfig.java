@@ -24,14 +24,20 @@ public class SecurityConfig {
 
      @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**", "/actuator/**","/admin/**")
-            .permitAll()  // <-- allow register & login
-                .anyRequest().authenticated()
-            );
+        // http
+        //     .csrf().disable()
+        //     .authorizeHttpRequests(auth -> auth
+        //         .requestMatchers("/api/v1/auth/**", "/actuator/**","/admin/**")
+        //     .permitAll()  // <-- allow register & login
+        //         .anyRequest().authenticated()
+        //     );
 
+        http
+        .csrf().disable() // Disable CSRF protection
+        .authorizeRequests()
+        .anyRequest().permitAll(); // Allow all requests (disable authentication)
+
+    
         return http.build();
     }
 }
