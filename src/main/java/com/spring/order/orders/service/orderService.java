@@ -1,6 +1,5 @@
 package com.spring.order.orders.service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public class orderService {
             Order savedOrder = orderRepository.save(order);
 
             // Save to Redis
-            orderCacheService.saveOrder("order|" + order.getId(), order);
+            orderCacheService.saveOrder("order|" + order.getId(), savedOrder);
 
             
         } catch (Exception e) {

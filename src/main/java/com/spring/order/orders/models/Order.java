@@ -1,6 +1,5 @@
 package com.spring.order.orders.models;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
