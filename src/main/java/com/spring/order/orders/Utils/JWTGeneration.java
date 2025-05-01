@@ -4,6 +4,9 @@ import io.jsonwebtoken.Jwts;
 
 import java.security.Key;
 import java.util.Date;
+
+import org.springframework.stereotype.Component;
+@Component
 public class JWTGeneration {
 
     // Secret key (should be at least 256 bits for HS256)
